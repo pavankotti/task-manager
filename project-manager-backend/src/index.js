@@ -13,13 +13,7 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 const app = express();
-app.use(cors({
-  origin: [
-    'http://localhost:5173', 
-    'https://task-manager-production-5abf.up.railway.app/' // Replace with your actual frontend URL
-  ],
-  credentials: true
-}));
+app.use(cors());
 app.use(express.json());
 
 // ==========================================

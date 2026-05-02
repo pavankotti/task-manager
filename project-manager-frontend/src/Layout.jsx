@@ -4,6 +4,8 @@ import { useAuth } from './AuthContext';
 import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 export const Layout = ({ children }) => {
   const { logout, user } = useAuth();
   const location = useLocation();
@@ -12,7 +14,7 @@ export const Layout = ({ children }) => {
   useEffect(() => {
     const fetchBroadcast = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/broadcast');
+        const res = await axios.get(`${API_URL}/api/broadcast`);
         setBroadcast(res.data);
       } catch (err) {
         // Silently fail if no broadcast exists

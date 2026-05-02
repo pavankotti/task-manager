@@ -12,6 +12,7 @@ import { BoardSkeleton } from './components/BoardSkeleton';
 // ==========================================
 // CONSTANTS & CONFIGURATION
 // ==========================================
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 const COLUMNS = ['Open Tasks', 'Staging', 'Assigned', 'Completed'];
 
 const PRIORITY_WEIGHTS = { 
@@ -47,7 +48,7 @@ export const ProjectDashboard = () => {
   useEffect(() => {
     const fetchBoard = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/projects/${projectId}/tasks`);
+        const res = await axios.get(`${API_URL}/api/projects/${projectId}/tasks`);
         setTasks(res.data);
       } catch (err) { 
         console.error('Failed to fetch board data:', err); 
@@ -93,7 +94,7 @@ export const ProjectDashboard = () => {
       });
 
       // Persist new status/order to backend
-      axios.patch('http://localhost:5000/api/tasks/reorder', {
+      axios.patch(`${API_URL}/api/tasks/reorder`, {
         taskId: active.id, 
         newStatus: over.id, 
         newOrder: 1 
@@ -106,7 +107,7 @@ export const ProjectDashboard = () => {
     if (!newTaskTitle.trim()) return;
 
     try {
-      const res = await axios.post('http://localhost:5000/api/tasks', { 
+      const res = await axios.post(`${API_URL}/api/tasks`, { 
         title: newTaskTitle, 
         priority: newTaskPriority, 
         projectId, 
@@ -127,7 +128,7 @@ export const ProjectDashboard = () => {
 
   const handleDeleteTask = async (taskId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/tasks/${taskId}`);
+      await axios.delete(`${API_URL}/api/tasks/${taskId}`);
       setTasks(prev => prev.filter(t => t.id !== taskId));
     } catch (err) {
       console.error("Failed to delete task", err);
@@ -149,7 +150,7 @@ export const ProjectDashboard = () => {
     }
 
     try {
-      const res = await axios.patch(`http://localhost:5000/api/tasks/${taskId}/${action}`, payload);
+      const res = await axios.patch(`${API_URL}/api/tasks/${taskId}/${action}`, payload);
       setTasks(prev => prev.map(t => t.id === taskId ? res.data : t));
     } catch (err) {
       console.error(`Failed to execute workflow action: ${action}`, err);

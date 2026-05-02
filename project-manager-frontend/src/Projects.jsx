@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { FolderKanban, Users, Plus, ArrowRight } from 'lucide-react';
 import { useAuth } from './AuthContext';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 // ==========================================
 // SUB-COMPONENTS (For cleaner render logic)
 // ==========================================
@@ -35,7 +37,7 @@ export const Projects = () => {
   // ==========================================
   const fetchProjects = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/projects');
+      const res = await axios.get(`${API_URL}/api/projects`);
       setProjects(res.data);
     } catch (err) {
       console.error('Failed to fetch projects', err);
@@ -56,7 +58,7 @@ export const Projects = () => {
     if (!newProjectName.trim()) return;
     
     try {
-      await axios.post('http://localhost:5000/api/projects', { name: newProjectName });
+      await axios.post(`${API_URL}/api/projects`, { name: newProjectName });
       
       // Reset form & refresh
       setNewProjectName('');

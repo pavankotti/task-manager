@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+model User {
+  id        String     @id @default(uuid())
+  email     String     @unique
+  password  String
+  role      Role       @default(MEMBER)
+  expertise String?
+  projects  Project[]  @relation("ProjectMembers")
+  tasks     Task[]     @relation("AssignedTasks")
+  proposals Proposal[]
+}
+
+model Project {
+  id      String    @id @default(uuid())
+  name    String
+  adminId String
+  members User[]    @relation("ProjectMembers")
+  tasks   Task[]
+}
+
+model Task {
+  id              String     @id @default(uuid())
+  title           String
+  status          String   
+  priority        String   
+  projectId       String
+  project         Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  assigneeId      String?
+  assignee        User?      @relation("AssignedTasks", fields: [assigneeId], references: [id])
+  order           Int      
+  dueDate         DateTime? 
+  winningApproach String?    // <--- Overwritten with the winning approach text when assigned
+  remarks         String?   
+  proposals       Proposal[]
+}
+
+model Proposal {
+  id        String   @id @default(uuid())
+  taskId    String
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  email     String
+  expertise String
+  text      String
+  createdAt DateTime @default(now())
+}

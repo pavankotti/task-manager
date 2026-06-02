@@ -70,9 +70,3 @@ npm run dev
 Open `http://localhost:3000` in your browser.
 
 ---
-
-## Production Deployment on Vercel
-1. Push this repository to GitHub.
-2. Import the repository in [Vercel](https://vercel.com).
-3. Set your `DATABASE_URL` and `JWT_SECRET` in Vercel's Environment Variables.
-4. Click **Deploy**. Vercel will automatically build the client pages, compile serverless API routes, and generate the database client.
